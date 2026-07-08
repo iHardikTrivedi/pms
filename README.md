@@ -1,36 +1,71 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Patient Management System (PMS)
 
-## Getting Started
+A medical clinic / patient management web application built with Next.js and TypeScript. It provides authentication, doctor & patient management, document upload/download, and a simple dashboard.
 
-First, run the development server:
+Live demo: https://REPLACE_WITH_YOUR_LIVE_URL
+
+## Key Features
+
+- Authentication (OTP-based flows)
+- Doctor and patient CRUD operations
+- Document upload, download and secure access
+- Dashboard with recent patients/doctors and stats
+
+## Tech Stack
+
+- Frontend & Server: Next.js (App Router) + React + TypeScript
+- Styling: CSS (PostCSS)
+- Database: MongoDB (Mongoose)
+- File storage: Cloud R2-compatible storage (R2)
+- SMS/OTP: Msg91 integration
+- Deployment: Vercel (recommended)
+
+## Quick Start
+
+1. Install dependencies
+
+```bash
+npm install
+```
+
+2. Create an `.env` file from your environment variables (examples below) and set secrets:
+
+```
+MONGODB_URI=your_mongodb_connection_string
+NEXTAUTH_SECRET=some_random_secret
+R2_ACCOUNT_ID=...
+R2_ACCESS_KEY_ID=...
+R2_SECRET_ACCESS_KEY=...
+R2_BUCKET=...
+MSG91_API_KEY=...
+NEXT_PUBLIC_BASE_URL=http://localhost:3000
+```
+
+3. Run development server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+4. Build for production
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+npm run build
+npm start
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Project Structure (high level)
 
-## Learn More
+- `app/` - Next.js App Router pages and API routes
+- `components/` - Reusable UI components
+- `features/` - Feature folders (auth, doctors, patients, documents)
+- `lib/` - Helper libraries (mongodb, r2, auth, session)
+- `models/` - Mongoose models
+- `utils/` - Utility helpers
 
-To learn more about Next.js, take a look at the following resources:
+## Notes
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- Replace the `Live demo` URL above with your actual deployment URL.
+- If you deploy to Vercel, set the same environment variables in the Vercel dashboard.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+If you want, I can add a Redis session store, CI workflow, or generate a `deploy` script for Vercel — tell me which you'd like next.
