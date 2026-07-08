@@ -1,3 +1,4 @@
+import { ROUTES } from "@/constants/routes";
 import Link from "next/link";
 
 export default function NotFound() {
@@ -15,7 +16,7 @@ export default function NotFound() {
         </p>
 
         <Link
-          href="/dashboard"
+          href={ROUTES.DASHBOARD}
           className="mt-6 inline-flex rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-blue-700"
         >
           Go to Dashboard
