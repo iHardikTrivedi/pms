@@ -2,7 +2,7 @@
 
 A medical clinic / patient management web application built with Next.js and TypeScript. It provides authentication, doctor & patient management, document upload/download, and a simple dashboard.
 
-Live demo: https://REPLACE_WITH_YOUR_LIVE_URL
+Live demo: https://pms-git-test-ihardiktrivedi.vercel.app
 
 ## Key Features
 
@@ -63,9 +63,17 @@ npm start
 - `models/` - Mongoose models
 - `utils/` - Utility helpers
 
-## Notes
+## Testing / Demo Instructions
 
-- Replace the `Live demo` URL above with your actual deployment URL.
-- If you deploy to Vercel, set the same environment variables in the Vercel dashboard.
+- Demo credentials:
+  - Mobile: use any 10-digit number (for example, `9999999999`).
+  - OTP: enter `12345` when prompted.
 
-If you want, I can add a Redis session store, CI workflow, or generate a `deploy` script for Vercel — tell me which you'd like next.
+- How to test flows:
+  - Open the app login page and enter any 10-digit mobile number, then submit the OTP `12345` to sign in.
+  - Visit the Dashboard → Patients table to find patient entries and their IDs.
+  - Click a patient (or open the patient details view) to check the Documents section; use the patient ID to verify document upload/download flows.
+
+- Note: The `12345` OTP is only a demo/testing shortcut — ensure the demo backend or local environment accepts this test OTP. If you need, I can add a dev-only bypass that accepts this OTP automatically.
+  - Example patient to check documents:
+    - In the Patients table click the patient ID PT-00046 (Anjali Desai) to open the patient details and view the Documents section.
