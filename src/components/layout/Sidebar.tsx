@@ -2,7 +2,7 @@
 
 import { ChevronLeft, ChevronRight, LogOut, X } from "lucide-react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 import { AppLogo } from "@/components/ui/AppLogo";
 import { NAVIGATION_ITEMS } from "@/constants/navigation";
@@ -17,17 +17,25 @@ type SidebarProps = {
 };
 
 export function Sidebar({
-  role = USER_ROLES.MASTER_ADMIN,
+  role = USER_ROLES.MASTER_DOCTOR,
   isCollapsed,
   isMobileOpen,
   onCollapse,
   onMobileClose,
 }: SidebarProps) {
   const pathname = usePathname();
+  const router = useRouter();
 
   const navigationItems = NAVIGATION_ITEMS.filter((item) =>
     item.roles.includes(role),
   );
+
+  const handleLogout = () => {
+    sessionStorage.removeItem("is_logged_in");
+    sessionStorage.removeItem("otp_mobile_number");
+
+    router.replace("/login");
+  };
 
   return (
     <>
@@ -55,7 +63,13 @@ export function Sidebar({
             isCollapsed ? "lg:justify-center lg:px-0" : "justify-between",
           ].join(" ")}
         >
-          <AppLogo compact={isCollapsed} />
+          <div className="hidden lg:block">
+            <AppLogo compact={isCollapsed} />
+          </div>
+
+          <div className="lg:hidden">
+            <AppLogo compact={false} />
+          </div>
 
           <button
             type="button"
@@ -105,6 +119,7 @@ export function Sidebar({
         <div className="shrink-0 border-t border-white/10 p-3">
           <button
             type="button"
+            onClick={handleLogout}
             title={isCollapsed ? "Logout" : undefined}
             className={[
               "flex h-11 w-full items-center rounded-lg text-sm font-medium text-blue-100",

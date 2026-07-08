@@ -1,5 +1,5 @@
 export const USER_ROLES = {
-  MASTER_ADMIN: "MASTER_ADMIN",
+  MASTER_DOCTOR: "MASTER_DOCTOR",
   DOCTOR: "DOCTOR",
 } as const;
 

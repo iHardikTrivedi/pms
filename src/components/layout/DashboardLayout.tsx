@@ -3,6 +3,8 @@
 import type { ReactNode } from "react";
 import { useState } from "react";
 
+import { USER_ROLES } from "@/constants/roles";
+
 import { Header } from "./Header";
 import { Sidebar } from "./Sidebar";
 
@@ -12,11 +14,19 @@ type DashboardLayoutProps = {
 
 export function DashboardLayout({ children }: DashboardLayoutProps) {
   const [isCollapsed, setIsCollapsed] = useState(false);
+
   const [isMobileOpen, setIsMobileOpen] = useState(false);
+
+  const loggedInDoctor = {
+    name: "Dr. Rajesh Sharma",
+    mobileNumber: "+91 98765 43210",
+    role: USER_ROLES.MASTER_DOCTOR,
+  };
 
   return (
     <div className="min-h-dvh bg-[#f7f9fc]">
       <Sidebar
+        role={loggedInDoctor.role}
         isCollapsed={isCollapsed}
         isMobileOpen={isMobileOpen}
         onCollapse={() => setIsCollapsed((previous) => !previous)}
@@ -30,11 +40,13 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
         ].join(" ")}
       >
         <Header
-          isSidebarCollapsed={isCollapsed}
+          userName={loggedInDoctor.name}
+          mobileNumber={loggedInDoctor.mobileNumber}
+          role={loggedInDoctor.role}
           onMenuClick={() => setIsMobileOpen(true)}
         />
 
-        <main className="pt-16">
+        <main className="pt-16 lg:pt-0">
           <div className="p-4 sm:p-6">{children}</div>
         </main>
       </div>

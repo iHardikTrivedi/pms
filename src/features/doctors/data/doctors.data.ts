@@ -1,3 +1,5 @@
+import { USER_ROLES } from "@/constants/roles";
+
 import type { Doctor } from "../types/doctor.types";
 
 export const DOCTORS: Doctor[] = [
@@ -5,6 +7,7 @@ export const DOCTORS: Doctor[] = [
     id: "DOC-001",
     name: "Dr. Rajesh Sharma",
     mobileNumber: "+91 98765 43210",
+    role: USER_ROLES.MASTER_DOCTOR,
     status: "ACTIVE",
     patientCount: 45,
     joinedOn: "01 May 2025",
@@ -14,6 +17,7 @@ export const DOCTORS: Doctor[] = [
     id: "DOC-002",
     name: "Dr. Priya Mehta",
     mobileNumber: "+91 98765 43211",
+    role: USER_ROLES.DOCTOR,
     status: "ACTIVE",
     patientCount: 32,
     joinedOn: "03 May 2025",
@@ -23,6 +27,7 @@ export const DOCTORS: Doctor[] = [
     id: "DOC-003",
     name: "Dr. Amit Patel",
     mobileNumber: "+91 98765 43212",
+    role: USER_ROLES.DOCTOR,
     status: "ACTIVE",
     patientCount: 28,
     joinedOn: "04 May 2025",
@@ -32,6 +37,7 @@ export const DOCTORS: Doctor[] = [
     id: "DOC-004",
     name: "Dr. Neha Verma",
     mobileNumber: "+91 98765 43213",
+    role: USER_ROLES.DOCTOR,
     status: "DISABLED",
     patientCount: 0,
     joinedOn: "06 May 2025",
@@ -41,6 +47,7 @@ export const DOCTORS: Doctor[] = [
     id: "DOC-005",
     name: "Dr. Sandeep Rao",
     mobileNumber: "+91 98765 43214",
+    role: USER_ROLES.DOCTOR,
     status: "ACTIVE",
     patientCount: 23,
     joinedOn: "07 May 2025",

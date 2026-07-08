@@ -1,38 +1,30 @@
 import { LayoutDashboard, Stethoscope, UserRound, Users } from "lucide-react";
 
-import { USER_ROLES, type UserRole } from "./roles";
-import { ROUTES } from "./routes";
+import { USER_ROLES } from "./roles";
 
-export type NavigationItem = {
-  label: string;
-  href: string;
-  icon: React.ElementType;
-  roles: UserRole[];
-};
-
-export const NAVIGATION_ITEMS: NavigationItem[] = [
+export const NAVIGATION_ITEMS = [
   {
     label: "Dashboard",
-    href: ROUTES.DASHBOARD,
+    href: "/dashboard",
     icon: LayoutDashboard,
-    roles: [USER_ROLES.MASTER_ADMIN, USER_ROLES.DOCTOR],
+    roles: [USER_ROLES.MASTER_DOCTOR, USER_ROLES.DOCTOR],
   },
   {
     label: "Doctors",
-    href: ROUTES.DOCTORS,
+    href: "/doctors",
     icon: Stethoscope,
-    roles: [USER_ROLES.MASTER_ADMIN],
+    roles: [USER_ROLES.MASTER_DOCTOR],
   },
   {
     label: "Patients",
-    href: ROUTES.PATIENTS,
+    href: "/patients",
     icon: Users,
-    roles: [USER_ROLES.DOCTOR],
+    roles: [USER_ROLES.MASTER_DOCTOR, USER_ROLES.DOCTOR],
   },
   {
-    label: "Profile",
-    href: ROUTES.PROFILE,
+    label: "My Profile",
+    href: "/profile",
     icon: UserRound,
-    roles: [USER_ROLES.MASTER_ADMIN, USER_ROLES.DOCTOR],
+    roles: [USER_ROLES.MASTER_DOCTOR, USER_ROLES.DOCTOR],
   },
 ];
