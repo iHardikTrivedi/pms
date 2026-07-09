@@ -2,10 +2,12 @@ import type { ReactNode } from "react";
 
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
 
-type LayoutProps = {
+type DashboardRootLayoutProps = {
   children: ReactNode;
 };
 
-export default function Layout({ children }: LayoutProps) {
+export default function DashboardRootLayout({
+  children,
+}: DashboardRootLayoutProps) {
   return <DashboardLayout>{children}</DashboardLayout>;
 }

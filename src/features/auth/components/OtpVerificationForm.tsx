@@ -8,7 +8,13 @@ import {
   UsersRound,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useEffect, useState, type FormEvent } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  useSyncExternalStore,
+  type FormEvent,
+} from "react";
 
 import { AppLogo } from "@/components/ui/AppLogo";
 import { Button } from "@/components/ui/Button";
@@ -34,25 +40,37 @@ const VERIFY_OTP_FEATURES = [
   },
 ];
 
+const subscribe = () => {
+  return () => {};
+};
+
+const getMobileNumberSnapshot = () => {
+  return sessionStorage.getItem("otp_mobile_number") ?? "";
+};
+
+const getMobileNumberServerSnapshot = () => {
+  return "";
+};
+
 export function OtpVerificationForm() {
   const router = useRouter();
+  const isVerifiedRef = useRef(false);
 
-  const [mobileNumber, setMobileNumber] = useState("");
+  const mobileNumber = useSyncExternalStore(
+    subscribe,
+    getMobileNumberSnapshot,
+    getMobileNumberServerSnapshot,
+  );
+
   const [otp, setOtp] = useState("");
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
-    const storedMobileNumber = sessionStorage.getItem("otp_mobile_number");
-
-    if (!storedMobileNumber) {
+    if (!mobileNumber && !isVerifiedRef.current) {
       router.replace("/login");
-
-      return;
     }
-
-    setMobileNumber(storedMobileNumber);
-  }, [router]);
+  }, [mobileNumber, router]);
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -76,6 +94,7 @@ export function OtpVerificationForm() {
         return;
       }
 
+      isVerifiedRef.current = true;
       sessionStorage.removeItem("otp_mobile_number");
       sessionStorage.setItem("is_logged_in", "true");
 

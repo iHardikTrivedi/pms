@@ -11,7 +11,6 @@ import type {
 } from "../types/document.types";
 import { getDocumentType } from "../utils/document.utils";
 import { DeleteDocumentModal } from "./DeleteDocumentModal";
-import { DocumentPreviewModal } from "./DocumentPreviewModal";
 import { DocumentTable } from "./DocumentTable";
 import { DocumentUploadModal } from "./DocumentUploadModal";
 
@@ -28,9 +27,6 @@ export function PatientDocuments({
     useState<PatientDocument[]>(initialDocuments);
 
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
-
-  const [previewDocument, setPreviewDocument] =
-    useState<PatientDocument | null>(null);
 
   const [documentToDelete, setDocumentToDelete] =
     useState<PatientDocument | null>(null);
@@ -99,22 +95,13 @@ export function PatientDocuments({
           </Button>
         </div>
 
-        <DocumentTable
-          documents={documents}
-          onPreview={setPreviewDocument}
-          onDelete={setDocumentToDelete}
-        />
+        <DocumentTable documents={documents} onDelete={setDocumentToDelete} />
       </div>
 
       <DocumentUploadModal
         isOpen={isUploadModalOpen}
         onClose={() => setIsUploadModalOpen(false)}
         onUpload={handleUpload}
-      />
-
-      <DocumentPreviewModal
-        document={previewDocument}
-        onClose={() => setPreviewDocument(null)}
       />
 
       <DeleteDocumentModal

@@ -1,15 +1,14 @@
 "use client";
 
-import { Download, Eye, File, FileImage, FileText, Trash2 } from "lucide-react";
+import { Download, File, FileImage, FileText, Trash2 } from "lucide-react";
 
 import { EmptyState } from "@/components/ui/EmptyState";
-import { formatFileSize } from "@/utils/format-file-size";
+import { formatFileSize } from "@/features/utils/format-file-size";
 
 import type { PatientDocument } from "../types/document.types";
 
 type DocumentTableProps = {
   documents: PatientDocument[];
-  onPreview: (document: PatientDocument) => void;
   onDelete: (document: PatientDocument) => void;
 };
 
@@ -27,11 +26,7 @@ function getDocumentIcon(type: PatientDocument["type"]) {
   }
 }
 
-export function DocumentTable({
-  documents,
-  onPreview,
-  onDelete,
-}: DocumentTableProps) {
+export function DocumentTable({ documents, onDelete }: DocumentTableProps) {
   if (documents.length === 0) {
     return (
       <EmptyState
@@ -79,7 +74,12 @@ export function DocumentTable({
                   className="transition-colors hover:bg-gray-50"
                 >
                   <td className="px-5 py-4">
-                    <div className="flex items-center gap-3">
+                    <a
+                      href={document.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-3 rounded-lg outline-none transition-colors hover:text-blue-600 focus-visible:ring-2 focus-visible:ring-blue-500"
+                    >
                       <div className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-blue-600">
                         <DocumentIcon size={19} />
                       </div>
@@ -93,7 +93,7 @@ export function DocumentTable({
                           {document.originalName}
                         </p>
                       </div>
-                    </div>
+                    </a>
                   </td>
 
                   <td className="px-5 py-4 text-sm text-gray-600">
@@ -110,19 +110,12 @@ export function DocumentTable({
 
                   <td className="px-5 py-4">
                     <div className="flex items-center justify-end gap-1">
-                      <button
-                        type="button"
-                        onClick={() => onPreview(document)}
-                        aria-label={`Preview ${document.name}`}
-                        className="flex size-8 items-center justify-center rounded-lg text-gray-500 hover:bg-blue-50 hover:text-blue-600"
-                      >
-                        <Eye size={16} />
-                      </button>
-
                       <a
                         href={document.url}
-                        download={document.originalName}
-                        aria-label={`Download ${document.name}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={(event) => event.stopPropagation()}
+                        aria-label={`Open ${document.name} in new tab`}
                         className="flex size-8 items-center justify-center rounded-lg text-gray-500 hover:bg-blue-50 hover:text-blue-600"
                       >
                         <Download size={16} />
@@ -130,7 +123,10 @@ export function DocumentTable({
 
                       <button
                         type="button"
-                        onClick={() => onDelete(document)}
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          onDelete(document);
+                        }}
                         aria-label={`Delete ${document.name}`}
                         className="flex size-8 items-center justify-center rounded-lg text-gray-500 hover:bg-red-50 hover:text-red-600"
                       >

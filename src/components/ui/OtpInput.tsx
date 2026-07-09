@@ -70,7 +70,10 @@ export function OtpInput({
   };
 
   return (
-    <div className="flex gap-2 sm:gap-3" onPaste={handlePaste}>
+    <div
+      className="grid w-full grid-cols-6 gap-2 sm:gap-3"
+      onPaste={handlePaste}
+    >
       {otpValues.map((digit, index) => (
         <input
           key={index}
@@ -86,7 +89,7 @@ export function OtpInput({
           onChange={(event) => handleChange(index, event)}
           onKeyDown={(event) => handleKeyDown(index, event)}
           aria-label={`OTP digit ${index + 1}`}
-          className="h-12 min-w-0 flex-1 rounded-lg border border-gray-300 bg-white text-center text-lg font-semibold text-gray-900 outline-none transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-100 disabled:cursor-not-allowed disabled:bg-gray-100"
+          className="h-12 w-full min-w-0 rounded-lg border border-gray-300 bg-white text-center text-lg font-semibold text-gray-900 outline-none transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-100 disabled:cursor-not-allowed disabled:bg-gray-100"
         />
       ))}
     </div>

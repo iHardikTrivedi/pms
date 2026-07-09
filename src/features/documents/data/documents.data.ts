@@ -3,7 +3,7 @@ import type { PatientDocument } from "../types/document.types";
 export const DOCUMENTS: PatientDocument[] = [
   {
     id: "DOC-FILE-001",
-    patientId: "PT-00046",
+    patientId: "PT-00045",
     name: "Blood Test Report",
     originalName: "blood-test-report.pdf",
     type: "PDF",
@@ -14,7 +14,7 @@ export const DOCUMENTS: PatientDocument[] = [
   },
   {
     id: "DOC-FILE-002",
-    patientId: "PT-00046",
+    patientId: "PT-00045",
     name: "Prescription",
     originalName: "prescription.jpg",
     type: "IMAGE",
@@ -25,7 +25,7 @@ export const DOCUMENTS: PatientDocument[] = [
   },
   {
     id: "DOC-FILE-003",
-    patientId: "PT-00046",
+    patientId: "PT-00045",
     name: "Medical History",
     originalName: "medical-history.docx",
     type: "WORD",
