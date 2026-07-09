@@ -1,6 +1,7 @@
 import { Plus, Search } from "lucide-react";
 import Link from "next/link";
 
+import { USER_ROLES } from "@/constants/roles";
 import { DoctorTable } from "@/features/doctors/components/DoctorTable";
 import { DOCTORS } from "@/features/doctors/data/doctors.data";
 
@@ -37,7 +38,10 @@ export default function DoctorsPage() {
           />
         </div>
 
-        <DoctorTable doctors={DOCTORS} />
+        <DoctorTable
+          doctors={DOCTORS}
+          currentUserRole={USER_ROLES.MASTER_DOCTOR}
+        />
       </div>
     </div>
   );

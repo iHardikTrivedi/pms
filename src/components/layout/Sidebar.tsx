@@ -3,8 +3,10 @@
 import { ChevronLeft, ChevronRight, LogOut, X } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
+import { useState } from "react";
 
 import { AppLogo } from "@/components/ui/AppLogo";
+import { ConfirmationModal } from "@/components/ui/ConfirmationModal";
 import { NAVIGATION_ITEMS } from "@/constants/navigation";
 import { USER_ROLES, type UserRole } from "@/constants/roles";
 
@@ -25,6 +27,7 @@ export function Sidebar({
 }: SidebarProps) {
   const pathname = usePathname();
   const router = useRouter();
+  const [isLogoutConfirmOpen, setIsLogoutConfirmOpen] = useState(false);
 
   const navigationItems = NAVIGATION_ITEMS.filter((item) =>
     item.roles.includes(role),
@@ -35,6 +38,15 @@ export function Sidebar({
     sessionStorage.removeItem("otp_mobile_number");
 
     router.replace("/login");
+  };
+
+  const handleLogoutClick = () => {
+    setIsLogoutConfirmOpen(true);
+  };
+
+  const handleLogoutConfirm = () => {
+    setIsLogoutConfirmOpen(false);
+    handleLogout();
   };
 
   return (
@@ -119,7 +131,7 @@ export function Sidebar({
         <div className="shrink-0 border-t border-white/10 p-3">
           <button
             type="button"
-            onClick={handleLogout}
+            onClick={handleLogoutClick}
             title={isCollapsed ? "Logout" : undefined}
             className={[
               "flex h-11 w-full items-center rounded-lg text-sm font-medium text-blue-100",
@@ -149,6 +161,17 @@ export function Sidebar({
           {isCollapsed ? <ChevronRight size={15} /> : <ChevronLeft size={15} />}
         </button>
       </aside>
+
+      <ConfirmationModal
+        isOpen={isLogoutConfirmOpen}
+        title="Logout"
+        description="You will be signed out of your account."
+        message="Are you sure you want to logout?"
+        confirmLabel="Yes"
+        cancelLabel="No"
+        onClose={() => setIsLogoutConfirmOpen(false)}
+        onConfirm={handleLogoutConfirm}
+      />
     </>
   );
 }

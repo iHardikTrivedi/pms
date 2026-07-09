@@ -3,7 +3,9 @@
 import { ChevronLeft, ChevronRight, Pencil, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+
+import { ConfirmationModal } from "@/components/ui/ConfirmationModal";
 
 import type { Patient } from "../types/patient.types";
 
@@ -20,13 +22,11 @@ function formatGender(gender: Patient["gender"]) {
 export function PatientTable({ patients }: PatientTableProps) {
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState(1);
-
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [patients.length]);
+  const [patientToDelete, setPatientToDelete] = useState<Patient | null>(null);
 
   const totalPages = Math.max(1, Math.ceil(patients.length / ROWS_PER_PAGE));
-  const startIndex = (currentPage - 1) * ROWS_PER_PAGE;
+  const safeCurrentPage = Math.min(currentPage, totalPages);
+  const startIndex = (safeCurrentPage - 1) * ROWS_PER_PAGE;
   const paginatedPatients = patients.slice(
     startIndex,
     startIndex + ROWS_PER_PAGE,
@@ -38,6 +38,15 @@ export function PatientTable({ patients }: PatientTableProps) {
 
   const goToNextPage = () => {
     setCurrentPage((page) => Math.min(totalPages, page + 1));
+  };
+
+  const handleDeleteConfirm = () => {
+    if (!patientToDelete) {
+      return;
+    }
+
+    console.log("Delete patient:", patientToDelete.id);
+    setPatientToDelete(null);
   };
 
   return (
@@ -112,7 +121,10 @@ export function PatientTable({ patients }: PatientTableProps) {
 
                     <button
                       type="button"
-                      onClick={(event) => event.stopPropagation()}
+                      onClick={(event) => {
+                        event.stopPropagation();
+                        setPatientToDelete(patient);
+                      }}
                       aria-label={`Delete ${patient.name}`}
                       className="flex size-8 items-center justify-center rounded-lg text-gray-500 hover:bg-red-50 hover:text-red-600"
                     >
@@ -126,6 +138,18 @@ export function PatientTable({ patients }: PatientTableProps) {
         </table>
       </div>
 
+      <ConfirmationModal
+        isOpen={Boolean(patientToDelete)}
+        title="Delete Patient"
+        description="This action cannot be undone."
+        message={`Are you sure you want to delete ${patientToDelete?.name ?? "this patient"}?`}
+        confirmLabel="Yes"
+        cancelLabel="No"
+        confirmButtonVariant="danger"
+        onClose={() => setPatientToDelete(null)}
+        onConfirm={handleDeleteConfirm}
+      />
+
       {totalPages > 1 && (
         <div className="flex flex-col gap-3 border-t border-gray-200 px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
           <p className="text-sm text-gray-600">
@@ -138,7 +162,7 @@ export function PatientTable({ patients }: PatientTableProps) {
             <button
               type="button"
               onClick={goToPreviousPage}
-              disabled={currentPage === 1}
+              disabled={safeCurrentPage === 1}
               className="inline-flex size-9 items-center justify-center rounded-lg border border-gray-200 text-gray-600 transition-colors disabled:cursor-not-allowed disabled:opacity-50 hover:border-blue-200 hover:text-blue-600"
               aria-label="Previous page"
             >
@@ -146,13 +170,13 @@ export function PatientTable({ patients }: PatientTableProps) {
             </button>
 
             <span className="min-w-20 rounded-lg border border-gray-200 px-3 py-2 text-center text-sm font-medium text-gray-700">
-              Page {currentPage} of {totalPages}
+              Page {safeCurrentPage} of {totalPages}
             </span>
 
             <button
               type="button"
               onClick={goToNextPage}
-              disabled={currentPage === totalPages}
+              disabled={safeCurrentPage === totalPages}
               className="inline-flex size-9 items-center justify-center rounded-lg border border-gray-200 text-gray-600 transition-colors disabled:cursor-not-allowed disabled:opacity-50 hover:border-blue-200 hover:text-blue-600"
               aria-label="Next page"
             >

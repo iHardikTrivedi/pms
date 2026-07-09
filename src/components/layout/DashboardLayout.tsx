@@ -18,7 +18,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
   const [isMobileOpen, setIsMobileOpen] = useState(false);
 
   const loggedInDoctor = {
-    name: "Dr. Rajesh Sharma",
+    name: "Dr. Nand Sharma",
     mobileNumber: "+91 98765 43210",
     role: USER_ROLES.MASTER_DOCTOR,
   };

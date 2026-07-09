@@ -4,6 +4,7 @@ import { Ban, CheckCircle2, Trash2, UserRound } from "lucide-react";
 import { useState } from "react";
 
 import { Button } from "@/components/ui/Button";
+import { ConfirmationModal } from "@/components/ui/ConfirmationModal";
 
 import type { Doctor } from "../types/doctor.types";
 import { DoctorStatusBadge } from "./DoctorStatusBadge";
@@ -14,6 +15,7 @@ type DoctorDetailsProps = {
 
 export function DoctorDetails({ doctor }: DoctorDetailsProps) {
   const [isActive, setIsActive] = useState(doctor.status === "ACTIVE");
+  const [isRemoveConfirmOpen, setIsRemoveConfirmOpen] = useState(false);
 
   const canRemoveDoctor = doctor.patientCount === 0;
 
@@ -27,6 +29,7 @@ export function DoctorDetails({ doctor }: DoctorDetailsProps) {
     }
 
     console.log("Remove doctor:", doctor.id);
+    setIsRemoveConfirmOpen(false);
   };
 
   return (
@@ -146,13 +149,25 @@ export function DoctorDetails({ doctor }: DoctorDetailsProps) {
           type="button"
           variant="danger"
           disabled={!canRemoveDoctor}
-          onClick={handleRemoveDoctor}
+          onClick={() => setIsRemoveConfirmOpen(true)}
           className="mt-5"
         >
           <Trash2 size={17} />
           Remove Doctor
         </Button>
       </div>
+
+      <ConfirmationModal
+        isOpen={isRemoveConfirmOpen}
+        title="Remove Doctor"
+        description="This action cannot be undone."
+        message={`Are you sure you want to remove ${doctor.name}?`}
+        confirmLabel="Yes"
+        cancelLabel="No"
+        confirmButtonVariant="danger"
+        onClose={() => setIsRemoveConfirmOpen(false)}
+        onConfirm={handleRemoveDoctor}
+      />
     </div>
   );
 }

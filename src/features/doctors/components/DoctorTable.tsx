@@ -1,9 +1,12 @@
 "use client";
 
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, Trash2 } from "lucide-react";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
+import { ConfirmationModal } from "@/components/ui/ConfirmationModal";
+import { USER_ROLES, type UserRole } from "@/constants/roles";
 import { ROUTES } from "@/constants/routes";
 import type { Doctor } from "@/features/doctors/types/doctor.types";
 
@@ -13,6 +16,7 @@ type DoctorTableProps = {
   doctors: Doctor[];
   title?: string;
   showViewAll?: boolean;
+  currentUserRole?: UserRole;
 };
 
 const ROWS_PER_PAGE = 15;
@@ -21,15 +25,15 @@ export function DoctorTable({
   doctors,
   title,
   showViewAll = false,
+  currentUserRole = USER_ROLES.DOCTOR,
 }: DoctorTableProps) {
+  const router = useRouter();
   const [currentPage, setCurrentPage] = useState(1);
-
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [doctors.length]);
+  const [doctorToDelete, setDoctorToDelete] = useState<Doctor | null>(null);
 
   const totalPages = Math.max(1, Math.ceil(doctors.length / ROWS_PER_PAGE));
-  const startIndex = (currentPage - 1) * ROWS_PER_PAGE;
+  const safeCurrentPage = Math.min(currentPage, totalPages);
+  const startIndex = (safeCurrentPage - 1) * ROWS_PER_PAGE;
   const paginatedDoctors = doctors.slice(
     startIndex,
     startIndex + ROWS_PER_PAGE,
@@ -41,6 +45,17 @@ export function DoctorTable({
 
   const goToNextPage = () => {
     setCurrentPage((page) => Math.min(totalPages, page + 1));
+  };
+
+  const isMasterDoctor = currentUserRole === USER_ROLES.MASTER_DOCTOR;
+
+  const handleDeleteConfirm = () => {
+    if (!doctorToDelete) {
+      return;
+    }
+
+    console.log("Delete doctor:", doctorToDelete.id);
+    setDoctorToDelete(null);
   };
 
   return (
@@ -85,6 +100,12 @@ export function DoctorTable({
               <th className="px-5 py-3 text-xs font-semibold text-gray-600">
                 Joined On
               </th>
+
+              {isMasterDoctor && (
+                <th className="px-5 py-3 text-right text-xs font-semibold text-gray-600">
+                  Actions
+                </th>
+              )}
             </tr>
           </thead>
 
@@ -92,7 +113,8 @@ export function DoctorTable({
             {paginatedDoctors.map((doctor) => (
               <tr
                 key={doctor.id}
-                className="border-b border-gray-100 transition-colors last:border-b-0 hover:bg-gray-50"
+                onClick={() => router.push(`/doctors/${doctor.id}`)}
+                className="cursor-pointer border-b border-gray-100 transition-colors last:border-b-0 hover:bg-gray-50"
               >
                 <td className="px-5 py-3 text-sm font-medium text-gray-800">
                   {doctor.name}
@@ -113,11 +135,39 @@ export function DoctorTable({
                 <td className="px-5 py-3 text-sm text-gray-600">
                   {doctor.joinedOn}
                 </td>
+
+                {isMasterDoctor && (
+                  <td className="px-5 py-3 text-right">
+                    <button
+                      type="button"
+                      onClick={(event) => {
+                        event.stopPropagation();
+                        setDoctorToDelete(doctor);
+                      }}
+                      aria-label={`Delete ${doctor.name}`}
+                      className="inline-flex size-8 items-center justify-center rounded-lg text-gray-500 transition-colors hover:bg-red-50 hover:text-red-600"
+                    >
+                      <Trash2 size={16} />
+                    </button>
+                  </td>
+                )}
               </tr>
             ))}
           </tbody>
         </table>
       </div>
+
+      <ConfirmationModal
+        isOpen={Boolean(doctorToDelete)}
+        title="Delete Doctor"
+        description="This action cannot be undone."
+        message={`Are you sure you want to delete ${doctorToDelete?.name ?? "this doctor"}?`}
+        confirmLabel="Yes"
+        cancelLabel="No"
+        confirmButtonVariant="danger"
+        onClose={() => setDoctorToDelete(null)}
+        onConfirm={handleDeleteConfirm}
+      />
 
       {totalPages > 1 && (
         <div className="flex flex-col gap-3 border-t border-gray-200 px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
@@ -131,7 +181,7 @@ export function DoctorTable({
             <button
               type="button"
               onClick={goToPreviousPage}
-              disabled={currentPage === 1}
+              disabled={safeCurrentPage === 1}
               className="inline-flex size-9 items-center justify-center rounded-lg border border-gray-200 text-gray-600 transition-colors disabled:cursor-not-allowed disabled:opacity-50 hover:border-blue-200 hover:text-blue-600"
               aria-label="Previous page"
             >
@@ -139,13 +189,13 @@ export function DoctorTable({
             </button>
 
             <span className="min-w-20 rounded-lg border border-gray-200 px-3 py-2 text-center text-sm font-medium text-gray-700">
-              Page {currentPage} of {totalPages}
+              Page {safeCurrentPage} of {totalPages}
             </span>
 
             <button
               type="button"
               onClick={goToNextPage}
-              disabled={currentPage === totalPages}
+              disabled={safeCurrentPage === totalPages}
               className="inline-flex size-9 items-center justify-center rounded-lg border border-gray-200 text-gray-600 transition-colors disabled:cursor-not-allowed disabled:opacity-50 hover:border-blue-200 hover:text-blue-600"
               aria-label="Next page"
             >
